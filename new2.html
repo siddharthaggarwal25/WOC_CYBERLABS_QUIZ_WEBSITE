@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="en">
+
+
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.5.0/Chart.min.js"></script>
+  <title>bazinga </title>
+</head>
+<style>
+  .graph{
+    width:50%;
+    margin: auto;
+    margin-top: 20vh;
+  }
+  .heading{
+    background-color: lightseagreen;
+    border-bottom: 2px solid black;
+  }
+  .inner{
+    color: whitesmoke;
+    padding: 20px 10px;
+    font-size: 2rem;
+  }
+  *{
+    padding: 0%;
+    margin: 0%;
+  }
+
+</style>
+
+<body>
+  <div class="heading">
+    <div class="inner">
+      RESULTS
+    </div>
+  </div>
+  <div class="graph">
+    <div>
+        <canvas id="myChart"></canvas>
+    </div>
+</div>
+
+
+</body>
+<script type="module">
+  // Import the functions you need from the SDKs you need
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/9.18.0/firebase-app.js";
+  import { getFirestore, collection, getDocs, addDoc } from "https://www.gstatic.com/firebasejs/9.18.0/firebase-firestore.js";
+  // TODO: Add SDKs for Firebase products that you want to use
+  // https://firebase.google.com/docs/web/setup#available-libraries
+
+  // Your web app's Firebase configuration
+  const firebaseConfig = {
+    apiKey: "AIzaSyDpOkcnY-66M76SYhrwfW2z573MCxOZLS0",
+    authDomain: "hello-3bcde.firebaseapp.com",
+    databaseURL: "https://hello-3bcde-default-rtdb.firebaseio.com",
+    projectId: "hello-3bcde",
+    storageBucket: "hello-3bcde.appspot.com",
+    messagingSenderId: "431414510681",
+    appId: "1:431414510681:web:06f2a01df0782894cadd48"
+  };
+
+  // Initialize Firebase
+  const app = initializeApp(firebaseConfig);
+  const db = getFirestore();
+  const colRef = collection(db, 'books');
+  const rowRef = collection(db, 'score');
+  var scoreboard = [];
+  var scoreofuser = [];
+  var nameofuser = [];
+
+  getDocs(rowRef)
+    .then((snapshot) => {
+
+      snapshot.docs.forEach((doc) => {
+        scoreboard.push({ ...doc.data(), id: doc.id })
+
+      })
+
+      for (var i = 0; i < (scoreboard.length); i++) {
+        var number = scoreboard[i];
+        if (scoreboard[i].name != null) {
+          nameofuser.push(number.name)
+        }
+      }
+
+
+      for (var i = 0; i < (scoreboard.length); i++) {
+        var numberr = scoreboard[i];
+        if (scoreboard[i].name != null) {
+          scoreofuser.push(numberr.value)
+        }
+      }
+
+      var xValues = nameofuser;
+      var yValues = scoreofuser;
+
+
+      new Chart("myChart", {
+        type: "bar",
+        data: {
+          backgroundColor: "black",
+          labels: xValues,
+          datasets: [{
+
+            data: yValues
+          }]
+        },
+        options: {
+          legend: { display: false },
+          title: {
+            display: true,
+            text: "score of users"
+          }
+        }
+      });
+
+      console.log(scoreboard);
+      console.log(nameofuser);
+      console.log(scoreofuser)
+    }
+    )
+
+
+
+
+
+
+</script>
+
+</html>
